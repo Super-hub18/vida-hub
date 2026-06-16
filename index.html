@@ -58,7 +58,6 @@
             margin-bottom: 20px;
         }
 
-        /* Navigation Tabs */
         .tabs {
             display: flex;
             justify-content: space-around;
@@ -87,7 +86,6 @@
             border: 1px solid var(--accent-blue);
         }
 
-        /* Status & Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -119,7 +117,6 @@
             margin-top: 4px;
         }
 
-        /* Key System Box */
         .key-box {
             background: var(--card-bg);
             width: 100%;
@@ -142,7 +139,6 @@
             gap: 8px;
         }
 
-        /* Container für Skripte */
         .container {
             width: 100%;
             max-width: 500px;
@@ -151,7 +147,6 @@
             gap: 25px;
         }
 
-        /* Skript Card */
         .card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -205,7 +200,6 @@
             line-height: 1.5;
         }
 
-        /* Buttons */
         .btn {
             width: 100%;
             background: none;
@@ -267,14 +261,13 @@
 
     <div class="key-box">
         <div class="key-title">🔑 Get Key</div>
-        <button class="btn" onclick="copyScript(this)" data-script="Hier echten Key-Link oder Key eintragen">
+        <button class="btn" onclick="copyScript(this)" data-script="VidaBest777">
             <i class="fas fa-key"></i> Copy Key
         </button>
     </div>
 
     <div class="container">
-
-        <!-- BLOCK 1 (Blox Fruits Bounty) -->
+        <!-- BLOCK 1 (Blox Fruits Bounty mit neuem Key) -->
         <div class="card">
             <div class="banner-frame">
                 <img class="banner-img" src="https://cdn.discordapp.com/attachments/1516388906470215742/1516394601848770622/IMG_2698.webp?ex=6a327c06&is=6a312a86&hm=da332bd7912939c0b1ffdaa412e36dcc1be8df22ee4a315e394a83ec69d314dd&" alt="Blox Fruits">
@@ -282,141 +275,25 @@
             <div class="card-body">
                 <div class="card-title">Blox Fruits (Bounty)</div>
                 <div class="card-desc">Dieser Script kann: [Auto Bounty, AIM, All on PVP]</div>
-                <button class="btn" onclick="copyScript(this)" data-script="loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua&quot;))()">
+                <button class="btn" onclick="copyScript(this)" data-script="local CorrectKey = 'VidaBest777' local ScreenGui = Instance.new('ScreenGui') local MainFrame = Instance.new('Frame') local UICorner = Instance.new('UICorner') local UIStroke = Instance.new('UIStroke') local Title = Instance.new('TextLabel') local KeyInput = Instance.new('TextBox') local UICornerTextBox = Instance.new('UICorner') local UIStrokeTextBox = Instance.new('UIStroke') local CheckButton = Instance.new('TextButton') local UICornerButton = Instance.new('UICorner') ScreenGui.Parent = game:GetService('CoreGui') ScreenGui.Name = 'VidaHubKeySystem' MainFrame.Name = 'MainFrame' MainFrame.Parent = ScreenGui MainFrame.BackgroundColor3 = Color3.fromRGB(19, 26, 38) MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100) MainFrame.Size = UDim2.new(0, 300, 0, 200) MainFrame.Active = true MainFrame.Draggable = true UICorner.CornerRadius = UDim.new(0, 12) UICorner.Parent = MainFrame UIStroke.Parent = MainFrame UIStroke.Thickness = 2 UIStroke.Color = Color3.fromRGB(0, 210, 255) UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border Title.Name = 'Title' Title.Parent = MainFrame Title.BackgroundTransparency = 1 Title.Position = UDim2.new(0, 0, 0, 15) Title.Size = UDim2.new(1, 0, 0, 30) Title.Font = Enum.Font.Poppins Title.Text = '⚡ VIDA HUB' Title.TextColor3 = Color3.fromRGB(0, 210, 255) Title.TextSize = 22 KeyInput.Name = 'KeyInput' KeyInput.Parent = MainFrame KeyInput.BackgroundColor3 = Color3.fromRGB(11, 15, 25) KeyInput.Position = UDim2.new(0.1, 0, 0.4, 0) KeyInput.Size = UDim2.new(0.8, 0, 0, 35) KeyInput.Font = Enum.Font.Poppins KeyInput.PlaceholderText = 'Enter Key Here...' KeyInput.PlaceholderColor3 = Color3.fromRGB(133, 143, 187) KeyInput.Text = '' KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255) KeyInput.TextSize = 14 UICornerTextBox.CornerRadius = UDim.new(0, 8) UICornerTextBox.Parent = KeyInput UIStrokeTextBox.Parent = KeyInput UIStrokeTextBox.Thickness = 1 UIStrokeTextBox.Color = Color3.fromRGB(157, 78, 221) CheckButton.Name = 'CheckButton' CheckButton.Parent = MainFrame CheckButton.BackgroundColor3 = Color3.fromRGB(19, 26, 38) CheckButton.Position = UDim2.new(0.2, 0, 0.7, 5) CheckButton.Size = UDim2.new(0.6, 0, 0, 35) CheckButton.Font = Enum.Font.Poppins CheckButton.Text = 'Check Key' CheckButton.TextColor3 = Color3.fromRGB(0, 210, 255) CheckButton.TextSize = 15 UICornerButton.CornerRadius = UDim.new(0, 8) UICornerButton.Parent = CheckButton local UIStrokeButton = Instance.new('UIStroke') UIStrokeButton.Parent = CheckButton UIStrokeButton.Thickness = 1 UIStrokeButton.Color = Color3.fromRGB(0, 210, 255) CheckButton.MouseButton1Click:Connect(function() if KeyInput.Text == CorrectKey then Title.Text = '✅ Key Correct!' Title.TextColor3 = Color3.fromRGB(46, 196, 182) CheckButton.Text = 'Loading...' task.wait(1) ScreenGui:Destroy() loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))() else Title.Text = '❌ Wrong Key!' Title.TextColor3 = Color3.fromRGB(255, 75, 75) UIStroke.Color = Color3.fromRGB(255, 75, 75) task.wait(1.5) Title.Text = '⚡ VIDA HUB' Title.TextColor3 = Color3.fromRGB(0, 210, 255) UIStroke.Color = Color3.fromRGB(0, 210, 255) end end)">
                     <i class="fas fa-copy"></i> Copy
                 </button>
             </div>
         </div>
 
-        <!-- BLOCK 2 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 2 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 3 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 3 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 4 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 4 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 5 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 5 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 6 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 6 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 7 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 7 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 8 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 8 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 9 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 9 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
-
-        <!-- BLOCK 10 -->
-        <div class="card">
-            <div class="banner-frame">
-                <div class="banner-placeholder"><i class="far fa-image fa-2x"></i> Game Banner</div>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Überschrift</div>
-                <div class="card-desc">Beschreibung</div>
-                <button class="btn" onclick="copyScript(this)" data-script="Code für Block 10 hier">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        </div>
+        <!-- BLOCK 2 bis 10 als Platzhalter -->
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 2</div><button class="btn" onclick="copyScript(this)" data-script="Code 2">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 3</div><button class="btn" onclick="copyScript(this)" data-script="Code 3">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 4</div><button class="btn" onclick="copyScript(this)" data-script="Code 4">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 5</div><button class="btn" onclick="copyScript(this)" data-script="Code 5">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 6</div><button class="btn" onclick="copyScript(this)" data-script="Code 6">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 7</div><button class="btn" onclick="copyScript(this)" data-script="Code 7">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 8</div><button class="btn" onclick="copyScript(this)" data-script="Code 8">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 9</div><button class="btn" onclick="copyScript(this)" data-script="Code 9">Copy</button></div></div>
+        <div class="card"><div class="card-body"><div class="card-title">Überschrift 10</div><button class="btn" onclick="copyScript(this)" data-script="Code 10">Copy</button></div></div>
 
     </div>
 
-    <!-- Kopier-Logik -->
     <script>
         function copyScript(buttonElement) {
             const keyText = buttonElement.getAttribute('data-script');
@@ -429,7 +306,7 @@
                     buttonElement.innerHTML = originalText;
                 }, 2000);
             }).catch(err => {
-                console.error('Fehler beim Kopieren: ', err);
+                console.error('Fehler: ', err);
             });
         }
     </script>
