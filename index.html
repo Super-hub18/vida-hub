@@ -18,24 +18,30 @@
             color: #00d2ff;
             text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 25px;
         }
 
+        /* DIE ORIGINALEN KÄSTEN/BADGES AUS DEM ALTEN SCRIPT */
         .badge-container {
-            margin-bottom: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .badge {
-            background-color: #131a26;
+            background: rgba(0, 210, 255, 0.05);
             border: 1px solid #00d2ff;
-            box-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
-            color: #00d2ff;
-            padding: 6px 14px;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 30px;
             font-size: 0.85rem;
             font-weight: bold;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 5px;
+            color: #00d2ff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* Key System Bereich */
@@ -52,14 +58,18 @@
         .key-box h3 {
             color: #9d4edd;
             margin-top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
         input[type="text"] {
-            width: 80%;
-            padding: 10px;
+            width: 85%;
+            padding: 12px;
             background-color: #0b0f19;
             border: 1px solid #00d2ff;
-            border-radius: 6px;
+            border-radius: 8px;
             color: white;
             text-align: center;
             font-size: 1rem;
@@ -71,7 +81,6 @@
             box-shadow: 0 0 8px #00d2ff;
         }
 
-        /* Bestätigen-Button für den Key */
         .submit-btn {
             background-color: #131a26;
             color: #9d4edd;
@@ -81,7 +90,7 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            width: 85%;
+            width: 90%;
             transition: all 0.2s;
             box-shadow: 0 0 5px rgba(157, 78, 221, 0.3);
         }
@@ -98,7 +107,7 @@
             font-size: 0.9rem;
         }
 
-        /* Grid für die Spiele-Blöcke */
+        /* Grid & Blöcke aus dem Original-Design */
         .hub-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -114,32 +123,43 @@
             padding: 20px;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
-            opacity: 0.4;
+            opacity: 0.3; /* Komplett ausgegraut wenn locked */
             pointer-events: none;
         }
 
         .block.unlocked {
             opacity: 1;
             pointer-events: auto;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
         }
 
         .block:hover.unlocked {
             transform: translateY(-5px);
-            box-shadow: 0 0 25px rgba(0, 210, 255, 0.6);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.5);
         }
 
         .block h2 {
             margin-top: 0;
             color: #00d2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
+        .block p {
+            color: #858fbb;
+            font-size: 0.95rem;
+        }
+
+        /* ORIGINALER GREEN-TOGGLE-BUTTON BEIM KOPIEREN */
         .copy-btn {
             background-color: #131a26;
             color: #00d2ff;
             border: 1px solid #00d2ff;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 1rem;
+            font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
@@ -148,9 +168,15 @@
         }
 
         .copy-btn:hover {
-            background-color: #00d2ff;
-            color: #131a26;
             box-shadow: 0 0 10px #00d2ff;
+            background-color: rgba(0, 210, 255, 0.05);
+        }
+
+        .copy-btn.copied {
+            background-color: #2ec4b6 !important;
+            color: #131a26 !important;
+            border-color: #2ec4b6 !important;
+            box-shadow: 0 0 15px #2ec4b6 !important;
         }
     </style>
 </head>
@@ -159,9 +185,9 @@
     <h1>⚡ VIDA SUPER HUB ⚡</h1>
     
     <div class="badge-container">
-        <span class="badge">🔥 100% FREE</span>
-        <span class="badge">🚀 NO KEY IN-GAME</span>
-        <span class="badge">🛠️ MOBILE OPTIMIZED</span>
+        <div class="badge">🔥 100% FREE</div>
+        <div class="badge">🚀 NO KEY IN-GAME</div>
+        <div class="badge">🛠️ MOBILE OPTIMIZED</div>
     </div>
 
     <div class="key-box">
@@ -176,13 +202,13 @@
         <div class="block" id="block1">
             <h2>🏴‍☠️ Blox Fruits</h2>
             <p>Hermanos Hub - Best Bounty & Auto Farm Script</p>
-            <button class="copy-btn" onclick="copyScript(`loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))()`)">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))()`)">Copy Script</button>
         </div>
 
         <div class="block" id="block2">
             <h2>🎮 Block 2</h2>
             <p>Coming Soon...</p>
-            <button class="copy-btn" onclick="copyScript('-- Soon')">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, '-- Soon')">Copy Script</button>
         </div>
 
     </div>
@@ -190,7 +216,6 @@
     <script>
         const correctKey = "super-hub777"; 
 
-        // Prüft erst, wenn man auf "Submit Key" klickt
         function checkKey() {
             const input = document.getElementById("keyInput").value.toLowerCase().trim();
             const status = document.getElementById("status");
@@ -223,9 +248,18 @@
             }
         }
 
-        function copyScript(scriptText) {
+        /* Der originale Kopier-Effekt (Button wird grün, kein nerviges Browser-Popup) */
+        function copyScript(button, scriptText) {
             navigator.clipboard.writeText(scriptText).then(() => {
-                alert("Script erfolgreich kopiert!");
+                const originalText = button.innerText;
+                button.innerText = "Copied! ✅";
+                button.classList.add("copied");
+                
+                // Nach 2 Sekunden wechselt der Button automatisch zurück zum Standard
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove("copied");
+                }, 2000);
             }).catch(err => {
                 alert("Fehler beim Kopieren: " + err);
             });
@@ -234,4 +268,3 @@
 
 </body>
 </html>
-
