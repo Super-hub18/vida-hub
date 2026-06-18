@@ -6,8 +6,8 @@
     <title>SUPER HUB</title>
     <style>
         body {
-            background-color: #000000; /* Reines Schwarz wie in image_7.png */
-            color: #ffffff; /* Hellweiß */
+            background-color: #000000;
+            color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
@@ -15,14 +15,13 @@
         }
 
         h1 {
-            color: #ffffff; /* Hellweiß */
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); /* Weißer Glow-Effekt */
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
             font-size: 2.5rem;
             margin-bottom: 25px;
             font-weight: bold;
         }
 
-        /* Das originale 2x2 Kachel-Raster */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -33,10 +32,10 @@
         }
 
         .stat-card {
-            background-color: #111111; /* Dunkelgrau */
+            background-color: #111111;
             border-radius: 12px;
             padding: 20px 10px;
-            border: 1px solid #222222; /* Dezenter grauer Rand */
+            border: 1px solid #222222;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -46,22 +45,21 @@
         .stat-value {
             font-size: 1.6rem;
             font-weight: bold;
-            color: #ffffff; /* Hellweiß */
+            color: #ffffff;
             margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 0.75rem;
             text-transform: uppercase;
-            color: #666666; /* Dunkleres Grau für die Beschriftung */
+            color: #666666;
             letter-spacing: 1px;
             font-weight: 600;
         }
 
-        /* Key System Bereich */
         .key-box {
             background: #111111;
-            border: 2px solid #ffffff; /* Weißer Rahmen wie in image_7.png */
+            border: 2px solid #ffffff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             padding: 20px;
@@ -121,7 +119,6 @@
             font-size: 0.9rem;
         }
 
-        /* Grid & Blöcke */
         .hub-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -144,7 +141,7 @@
         .block.unlocked {
             opacity: 1;
             pointer-events: auto;
-            border-color: #ffffff; /* Weißer Rand bei Unlocked */
+            border-color: #ffffff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
         }
 
@@ -193,12 +190,15 @@
             box-shadow: 0 0 15px #ffffff !important;
         }
 
+        /* Perfekter Style für Videos und Bilder */
         .game-banner {
             width: 100%;
-            max-height: 180px;
+            height: 150px;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 15px;
+            display: block;
+            border: none;
         }
     </style>
 </head>
@@ -235,21 +235,24 @@
     <div class="hub-container">
 
         <div class="block" id="block1">
-            <img src="https://cdn.discordapp.com/attachments/1516375399645581434/1516549532396032120/image0.jpg?ex=6a330c50&is=6a31bad0&hm=2eb861b030dba3d5b33f823dae3eeb063cc58764ee79c057372136e1b5844936&" alt="Game Banner" class="game-banner">
+            <video class="game-banner" autoplay loop muted playsinline>
+                <source src="https://streamable.com/video/mp4/rrulf1.mp4" type="video/mp4">
+                Ihr Browser unterstützt dieses Video nicht.
+            </video>
             <h2>🏴‍☠️ Blox Fruits</h2>
             <p>Hermanos Hub - Best Bounty & Auto Farm Script</p>
             <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))()`)">Copy Script</button>
         </div>
 
         <div class="block" id="block2">
-            <img src="https://cdn.discordapp.com/attachments/1516375399645581434/1516551977994031215/IMG_2772.png?ex=6a330e97&is=6a31bd17&hm=1df311fb6d95372f07e978a9fcf3ea9d37056259563f9b466b35bd35d46f0f7d&" alt="Game Banner" class="game-banner">
+            <img src="https://images.prodia.xyz/744fb8f0-48fe-4098-824e-0f09d455d4f5.png" alt="Game Banner" class="game-banner">
             <h2>⚔️ Blox Fruits [All in ONE]</h2>
             <p>Fake Admin, Raids, Auto Farm, Quests & More!</p>
             <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua&quot;))()`)">Copy Script</button>
         </div>
 
         <div class="block" id="block3">
-            <img src="https://cdn.discordapp.com/attachments/1516375399645581434/1516750519253729310/image.png" alt="Game Banner" class="game-banner">
+            <img src="https://images.prodia.xyz/744fb8f0-48fe-4098-824e-0f09d455d4f5.png" alt="Game Banner" class="game-banner">
             <h2>🎯 Rivals</h2>
             <p>Aimbot, Infinite Double Jump, ESP & More!</p>
             <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/awakeningswifters/LexusHubLoader/refs/heads/main/Loader.lua&quot;))()`)">Copy Script</button>
@@ -272,6 +275,9 @@
                 
                 blocks.forEach(block => {
                     block.classList.add("unlocked");
+                    // Startet das Video automatisch nach dem Unlocken
+                    const video = block.querySelector("video");
+                    if (video) video.play();
                 });
             } else if (input === "") {
                 status.innerText = "Please enter a key! ⚠️";
