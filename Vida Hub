@@ -1,0 +1,496 @@
+-- [[ VIDA ULTIMATE v8.4 - Fruit Snipe Edition ]]
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+local Camera = workspace.CurrentCamera
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local RS = game:GetService("ReplicatedStorage")
+local ControlModule = require(Player.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
+
+-- 1. CLEANUP
+local function cleanup()
+    local ids = {"VidaLoader", "VidaHub", "VidaESP", "VidaWaterWalker", "VidaFlash"}
+    for _, id in pairs(ids) do
+        local old = PlayerGui:FindFirstChild(id) or workspace:FindFirstChild(id)
+        if old then old:Destroy() end
+    end
+end
+cleanup()
+
+local espFolder = Instance.new("Folder", PlayerGui)
+espFolder.Name = "VidaESP"
+
+-- 2. MULTI-FLASH LOGIK
+local flashGui = Instance.new("ScreenGui", PlayerGui)
+flashGui.Name = "VidaFlash"
+flashGui.IgnoreGuiInset = true
+local flashFrame = Instance.new("Frame", flashGui)
+flashFrame.Size = UDim2.new(1, 0, 1, 0)
+flashFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+flashFrame.BackgroundTransparency = 1
+
+local function doMultiFlash()
+    for i = 1, 5 do 
+        flashFrame.BackgroundTransparency = 0
+        task.wait(0.05)
+        flashFrame.BackgroundTransparency = 1
+        task.wait(0.05)
+    end
+end
+
+-- 3. NEON LOADING SCREEN
+local loaderGui = Instance.new("ScreenGui", PlayerGui)
+loaderGui.Name = "VidaLoader"
+loaderGui.IgnoreGuiInset = true
+local loadFrame = Instance.new("Frame", loaderGui)
+loadFrame.Size = UDim2.new(1, 0, 1, 0)
+loadFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 10)
+local title = Instance.new("TextLabel", loadFrame)
+title.Size = UDim2.new(0, 500, 0, 120)
+title.Position = UDim2.new(0.5, -250, 0.45, -60)
+title.Text = "VIDA HUB"
+title.TextColor3 = Color3.fromRGB(0, 200, 255)
+title.TextSize = 75
+title.Font = Enum.Font.SpecialElite
+title.BackgroundTransparency = 1
+title.TextStrokeTransparency = 0.2
+title.TextStrokeColor3 = Color3.fromRGB(150, 0, 255)
+local subText = Instance.new("TextLabel", loadFrame)
+subText.Size = UDim2.new(0, 400, 0, 30)
+subText.Position = UDim2.new(0.5, -200, 0.58, 0)
+subText.Text = "Initializing Hub..."
+subText.TextColor3 = Color3.fromRGB(180, 180, 180)
+subText.TextSize = 20
+subText.Font = Enum.Font.Code
+subText.BackgroundTransparency = 1
+
+local screenGui = Instance.new("ScreenGui", PlayerGui)
+screenGui.Name = "VidaHub"
+screenGui.Enabled = false
+
+task.spawn(function()
+    for i = 1, 15 do
+        title.TextStrokeColor3 = Color3.fromRGB(150, 0, 255)
+        subText.Text = "VIDA Engine Loading... " .. (i*6) .. "%"
+        task.wait(0.1)
+        title.TextStrokeColor3 = Color3.fromRGB(0, 200, 255)
+        task.wait(0.1)
+    end
+    loaderGui:Destroy()
+    screenGui.Enabled = true
+end)
+
+-- 4. DER HUB
+local mainContainer = Instance.new("Frame", screenGui)
+mainContainer.Size = UDim2.new(0, 240, 0, 420) 
+mainContainer.Position = UDim2.new(0.1, 0, 0.3, 0)
+mainContainer.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+mainContainer.BorderSizePixel = 0
+Instance.new("UICorner", mainContainer).CornerRadius = UDim.new(0, 12)
+local hubStroke = Instance.new("UIStroke", mainContainer)
+hubStroke.Color = Color3.fromRGB(0, 200, 255)
+hubStroke.Thickness = 2.5
+
+local topBar = Instance.new("Frame", mainContainer)
+topBar.Size = UDim2.new(1, 0, 0, 35)
+topBar.BackgroundTransparency = 1
+
+local minBtn = Instance.new("TextButton", topBar)
+minBtn.Size = UDim2.new(0, 25, 0, 25)
+minBtn.Position = UDim2.new(1, -30, 0, 5)
+minBtn.Text = "-"
+minBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+minBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", minBtn).CornerRadius = UDim.new(1, 0)
+
+local smallBtn = Instance.new("TextButton", screenGui)
+smallBtn.Size = UDim2.new(0, 60, 0, 60)
+smallBtn.Visible = false
+smallBtn.Text = "VIDA"
+smallBtn.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+smallBtn.TextColor3 = Color3.fromRGB(0, 200, 255)
+smallBtn.Font = Enum.Font.GothamBold
+Instance.new("UICorner", smallBtn).CornerRadius = UDim.new(1, 0)
+
+minBtn.MouseButton1Click:Connect(function() mainContainer.Visible = false smallBtn.Visible = true smallBtn.Position = mainContainer.Position end)
+smallBtn.MouseButton1Click:Connect(function() smallBtn.Visible = false mainContainer.Visible = true end)
+
+local scroll = Instance.new("ScrollingFrame", mainContainer)
+scroll.Size = UDim2.new(1, -20, 1, -50)
+scroll.Position = UDim2.new(0, 10, 0, 40)
+scroll.BackgroundTransparency = 1
+scroll.BorderSizePixel = 0
+scroll.ScrollBarThickness = 0
+scroll.CanvasSize = UDim2.new(0, 0, 1.8, 0) -- Angepasst für Snipe Button
+local layout = Instance.new("UIListLayout", scroll)
+layout.Padding = UDim.new(0, 8)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- 5. HILFSFUNKTIONEN
+local function createSlider(parent, defaultValue, minVal, maxVal, order)
+    local sliderFrame = Instance.new("Frame", parent)
+    sliderFrame.Size = UDim2.new(1, 0, 0, 25)
+    sliderFrame.BackgroundTransparency = 1
+    sliderFrame.Visible = false
+    sliderFrame.LayoutOrder = order
+    local bg = Instance.new("Frame", sliderFrame)
+    bg.Size = UDim2.new(1, -20, 0, 4)
+    bg.Position = UDim2.new(0, 10, 0.5, -2)
+    bg.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    Instance.new("UICorner", bg)
+    local fill = Instance.new("Frame", bg)
+    fill.Size = UDim2.new((defaultValue - minVal)/(maxVal - minVal), 0, 1, 0)
+    fill.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
+    Instance.new("UICorner", fill)
+    local knob = Instance.new("Frame", sliderFrame)
+    knob.Size = UDim2.new(0, 14, 0, 14)
+    knob.Position = UDim2.new(fill.Size.X.Scale, -7, 0.5, -7)
+    knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+    local currentVal = defaultValue
+    local function update(input)
+        local pos = math.clamp((input.Position.X - bg.AbsolutePosition.X) / bg.AbsoluteSize.X, 0, 1)
+        fill.Size = UDim2.new(pos, 0, 1, 0)
+        knob.Position = UDim2.new(pos, -7, 0.5, -7)
+        currentVal = minVal + (pos * (maxVal - minVal))
+    end
+    local dragging = false
+    knob.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = true end end)
+    UserInputService.InputEnded:Connect(function() dragging = false end)
+    UserInputService.InputChanged:Connect(function(input) if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then update(input) end end)
+    return sliderFrame, function() return currentVal end
+end
+
+local function createBtn(name, order)
+    local b = Instance.new("TextButton", scroll)
+    b.Size = UDim2.new(1, 0, 0, 40)
+    b.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    b.Text = name
+    b.TextColor3 = Color3.fromRGB(200, 200, 200)
+    b.Font = Enum.Font.GothamBold
+    b.LayoutOrder = order
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+    local s = Instance.new("UIStroke", b)
+    s.Color = Color3.fromRGB(60, 60, 80)
+    s.Thickness = 1.5
+    return b, s
+end
+
+-- 6. ESP SCANNER
+local function createScanner(target, highlightColor, labelColor)
+    if not target:FindFirstChild("HumanoidRootPart") then return end
+    local highlight = Instance.new("Highlight", espFolder)
+    highlight.Adornee = target
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 0
+    highlight.FillColor = highlightColor
+    highlight.OutlineColor = highlightColor
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    local billboard = Instance.new("BillboardGui", espFolder)
+    billboard.Adornee = target.HumanoidRootPart
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.AlwaysOnTop = true
+    billboard.StudsOffset = Vector3.new(0, 3.5, 0)
+    local label = Instance.new("TextLabel", billboard)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = labelColor
+    label.TextSize = 18
+    label.Font = Enum.Font.GothamBold
+    label.TextStrokeTransparency = 0.2
+    RunService.RenderStepped:Connect(function()
+        if target.Parent and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+            local dist = math.floor((target.HumanoidRootPart.Position - Player.Character.HumanoidRootPart.Position).Magnitude)
+            label.Text = "[" .. dist .. "m]"
+        else
+            highlight:Destroy() billboard:Destroy()
+        end
+    end)
+end
+
+-- 7. BUTTONS
+local tpPlayerBtn, tpPlayerS = createBtn("TP PLAYER: OFF", 0)
+local flyBtn, flyS = createBtn("FLY: OFF", 1)
+local flySlider, getFlySpeed = createSlider(scroll, 2, 1, 10, 2)
+local speedBtn, speedS = createBtn("SPEED: OFF", 3)
+local speedSlider, getWalkSpeed = createSlider(scroll, 2, 1, 15, 4)
+local killBtn, killS = createBtn("AUTO KILL: OFF", 5)
+local aimBtn, aimS = createBtn("VIDA AIM: OFF", 7)
+local invBtn, invS = createBtn("INVISIBLE: OFF", 8)
+local ghostBtn, ghostS = createBtn("GHOST: OFF", 9)
+local setBtn, setS = createBtn("SET POSITION", 10)
+local loadBtn, loadS = createBtn("LOAD POSITION", 11)
+local scanP, scanPS = createBtn("SCAN PLAYER: OFF", 12)
+local snipeFruitBtn, snipeFS = createBtn("SNIPE FRUIT", 13) -- NEUER SNIPE BUTTON
+
+-- 8. LOGIK VARIABLEN
+local flyOn, speedOn, invOn, ghostOn, pScanOn = false, false, false, false, false
+local tracking, aimOn = false, false
+local stickyTpOn = false
+local tpTargetPlayer = nil
+local savedPos, tpPos, currentTarget = nil, nil, nil
+local rotX, rotY = 0, 0
+local bodyVelocity, guiStates = nil, {}
+
+-- UI ELEMENTS
+local tpPlayerFrame = Instance.new("ScrollingFrame", screenGui)
+tpPlayerFrame.Size = UDim2.new(0, 180, 0, 200)
+tpPlayerFrame.Position = UDim2.new(0.1, 250, 0.2, 0)
+tpPlayerFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+tpPlayerFrame.Visible = false
+Instance.new("UICorner", tpPlayerFrame)
+local tpLayout = Instance.new("UIListLayout", tpPlayerFrame)
+tpLayout.Padding = UDim.new(0, 5)
+
+local waterPart = Instance.new("Part", workspace)
+waterPart.Name = "VidaWaterWalker"
+waterPart.Size = Vector3.new(25, 1, 25)
+waterPart.Transparency = 1
+waterPart.Anchored = true
+waterPart.CanCollide = true
+
+-- UPDATE FUNKTIONEN
+local function updatePlayerTPList()
+    for _, c in pairs(tpPlayerFrame:GetChildren()) do if c:IsA("TextButton") then c:Destroy() end end
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p ~= Player then
+            local b = Instance.new("TextButton", tpPlayerFrame)
+            b.Size = UDim2.new(1, 0, 0, 30)
+            b.Text = p.Name
+            b.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+            b.TextColor3 = Color3.new(1, 1, 1)
+            b.MouseButton1Click:Connect(function()
+                tpTargetPlayer = p
+                stickyTpOn = true
+                tpPlayerBtn.Text = "STICKY: " .. p.Name:sub(1,6)
+                tpPlayerS.Color = Color3.fromRGB(0, 255, 150)
+                tpPlayerFrame.Visible = false
+            end)
+        end
+    end
+end
+
+-- 9. BUTTON EVENTS
+tpPlayerBtn.MouseButton1Click:Connect(function()
+    if stickyTpOn then
+        stickyTpOn = false
+        tpTargetPlayer = nil
+        tpPlayerBtn.Text = "TP PLAYER: OFF"
+        tpPlayerS.Color = Color3.fromRGB(60, 60, 80)
+    else
+        updatePlayerTPList()
+        tpPlayerFrame.Visible = not tpPlayerFrame.Visible
+    end
+end)
+
+flyBtn.MouseButton1Click:Connect(function()
+    flyOn = not flyOn
+    flyBtn.Text = flyOn and "FLY: ON" or "FLY: OFF"
+    flyS.Color = flyOn and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(60, 60, 80)
+    flySlider.Visible = flyOn
+    local char = Player.Character
+    if flyOn and char then
+        char.Humanoid.PlatformStand = true
+        bodyVelocity = Instance.new("BodyVelocity", char.HumanoidRootPart)
+        bodyVelocity.MaxForce = Vector3.new(1,1,1) * 10^5
+    elseif char then
+        char.Humanoid.PlatformStand = false
+        if bodyVelocity then bodyVelocity:Destroy() end
+    end
+end)
+
+speedBtn.MouseButton1Click:Connect(function()
+    speedOn = not speedOn
+    speedBtn.Text = speedOn and "SPEED: ON" or "SPEED: OFF"
+    speedS.Color = speedOn and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(60, 60, 80)
+    speedSlider.Visible = speedOn
+end)
+
+killBtn.MouseButton1Click:Connect(function()
+    tracking = not tracking
+    killBtn.Text = tracking and "AUTO KILL: HUNTING" or "AUTO KILL: OFF"
+    killS.Color = tracking and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(60, 60, 80)
+    if tracking then
+        local dist = 300
+        for _, v in pairs(game.Players:GetPlayers()) do
+            if v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v ~= Player then
+                local mag = (Player.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).Magnitude
+                if mag < dist then dist = mag currentTarget = v.Character end
+            end
+        end
+    else currentTarget = nil end
+end)
+
+aimBtn.MouseButton1Click:Connect(function()
+    aimOn = not aimOn
+    aimBtn.Text = aimOn and "VIDA AIM: ON" or "VIDA AIM: OFF"
+    aimS.Color = aimOn and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(60, 60, 80)
+end)
+
+scanP.MouseButton1Click:Connect(function()
+    pScanOn = not pScanOn
+    scanP.Text = pScanOn and "SCAN PLAYER: ON" or "SCAN PLAYER: OFF"
+    scanPS.Color = pScanOn and Color3.new(1,1,1) or Color3.fromRGB(60, 60, 80)
+    espFolder:ClearAllChildren()
+    if pScanOn then
+        for _, p in pairs(game.Players:GetPlayers()) do
+            if p ~= Player and p.Character then createScanner(p.Character, Color3.new(1,1,1), Color3.new(1,1,1)) end
+        end
+    end
+end)
+
+invBtn.MouseButton1Click:Connect(function()
+    invOn = not invOn
+    invBtn.Text = invOn and "INVISIBLE: ON" or "INVISIBLE: OFF"
+    invS.Color = invOn and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(60, 60, 80)
+    local hrp = Player.Character:FindFirstChild("HumanoidRootPart")
+    if invOn and hrp then
+        savedPos = hrp.CFrame
+        hrp.CFrame = hrp.CFrame * CFrame.new(0, -150, 0)
+        hrp.Anchored = true
+    elseif hrp then
+        hrp.Anchored = false
+        if savedPos then hrp.CFrame = savedPos end
+    end
+end)
+
+ghostBtn.MouseButton1Click:Connect(function()
+    ghostOn = not ghostOn
+    ghostBtn.Text = ghostOn and "GHOST: ON" or "GHOST: OFF"
+    ghostS.Color = ghostOn and Color3.fromRGB(0, 255, 150) or Color3.fromRGB(60, 60, 80)
+    local char = Player.Character
+    if ghostOn and char then
+        for _, g in pairs(PlayerGui:GetChildren()) do
+            if g:IsA("ScreenGui") and g ~= screenGui and g.Name ~= "TouchGui" then
+                guiStates[g] = g.Enabled g.Enabled = false
+            end
+        end
+        char.HumanoidRootPart.Anchored = true
+        char.Humanoid.AutoRotate = false
+        local y, x, z = Camera.CFrame:ToEulerAnglesYXZ()
+        rotX, rotY = x, y
+        Camera.CameraType = Enum.CameraType.Scriptable
+    elseif char then
+        for g, state in pairs(guiStates) do if g and g.Parent then g.Enabled = state end end
+        char.HumanoidRootPart.Anchored = false
+        char.Humanoid.AutoRotate = true
+        Camera.CameraType = Enum.CameraType.Custom
+    end
+end)
+
+setBtn.MouseButton1Click:Connect(function()
+    local hrp = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+    if hrp then tpPos = hrp.CFrame setS.Color = Color3.new(1,1,1) task.wait(0.3) setS.Color = Color3.fromRGB(60, 60, 80) end
+end)
+
+loadBtn.MouseButton1Click:Connect(function()
+    local hrp = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+    if hrp and tpPos then 
+        task.spawn(doMultiFlash)
+        hrp.CFrame = tpPos 
+    end
+end)
+
+-- FRUIT SNIPE LOGIK
+snipeFruitBtn.MouseButton1Click:Connect(function()
+    local char = Player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local hrp = char.HumanoidRootPart
+    
+    local targetFruit = nil
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj.Name:find("Fruit") and (obj:IsA("Tool") or (obj:IsA("Model") and obj:FindFirstChild("Handle"))) then
+            targetFruit = obj
+            break
+        end
+    end
+
+    if targetFruit then
+        local oldPos = hrp.CFrame
+        local fruitPos = targetFruit:IsA("Tool") and targetFruit.Handle.CFrame or targetFruit:GetModelCFrame()
+        
+        snipeFS.Color = Color3.fromRGB(255, 255, 255)
+        hrp.CFrame = fruitPos
+        task.wait(0.1) -- Blitzschnelles Warten
+        hrp.CFrame = oldPos
+        snipeFS.Color = Color3.fromRGB(60, 60, 80)
+    else
+        snipeFruitBtn.Text = "NO FRUIT!"
+        task.wait(1)
+        snipeFruitBtn.Text = "SNIPE FRUIT"
+    end
+end)
+
+-- 10. MAIN LOOP
+RunService.RenderStepped:Connect(function()
+    local char = Player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local hrp = char.HumanoidRootPart
+    local hum = char:FindFirstChild("Humanoid")
+
+    -- NOCLIP
+    if flyOn or stickyTpOn then
+        for _, part in pairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then part.CanCollide = false end
+        end
+    end
+    
+    -- STICKY TP
+    if stickyTpOn and tpTargetPlayer and tpTargetPlayer.Character and tpTargetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local targetHrp = tpTargetPlayer.Character.HumanoidRootPart
+        hrp.CFrame = targetHrp.CFrame
+        hrp.Velocity = Vector3.new(0, 0, 0)
+    elseif stickyTpOn then
+        stickyTpOn = false
+        tpTargetPlayer = nil
+        tpPlayerBtn.Text = "TP PLAYER: OFF"
+        tpPlayerS.Color = Color3.fromRGB(60, 60, 80)
+    end
+
+    if hrp.Position.Y < 5 then waterPart.CFrame = CFrame.new(hrp.Position.X, 0, hrp.Position.Z) else waterPart.CFrame = CFrame.new(0, -500, 0) end
+
+    if aimOn then
+        local target = nil
+        local dist = 150
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("Model") and v:FindFirstChild("Humanoid") and v ~= char then
+                if v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                    local d = (hrp.Position - v.HumanoidRootPart.Position).Magnitude
+                    if d < dist then target = v.HumanoidRootPart dist = d end
+                end
+            end
+        end
+        if target then Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Position) end
+    end
+
+    if tracking and currentTarget and currentTarget:FindFirstChild("HumanoidRootPart") then
+        hrp.CFrame = currentTarget.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+        if currentTarget.Humanoid.Health <= 0 then tracking = false killBtn.Text = "AUTO KILL: OFF" end
+    end
+
+    if ghostOn then
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position) * CFrame.fromEulerAnglesYXZ(rotY, rotX, 0)
+        local mv = ControlModule:GetMoveVector()
+        Camera.CFrame = Camera.CFrame + (Camera.CFrame.LookVector * -mv.Z + Camera.CFrame.RightVector * mv.X) * 2
+    elseif flyOn then
+        local mv = ControlModule:GetMoveVector()
+        hrp.Velocity = Vector3.new(0,0,0)
+        local lookAtCFrame = CFrame.new(hrp.Position) * Camera.CFrame.Rotation
+        hrp.CFrame = lookAtCFrame + (Camera.CFrame.LookVector * -mv.Z + Camera.CFrame.RightVector * mv.X) * getFlySpeed()
+    end
+    if speedOn then hum.WalkSpeed = 16 * getWalkSpeed() else hum.WalkSpeed = 16 end
+end)
+
+-- DRAGGING
+local dragging, dragStart, startPos
+topBar.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = true dragStart = input.Position startPos = mainContainer.Position end end)
+UserInputService.InputChanged:Connect(function(input) 
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        mainContainer.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    elseif ghostOn and input.UserInputType == Enum.UserInputType.Touch and input.Position.X > (Camera.ViewportSize.X / 2) then
+        rotX = rotX - input.Delta.X * 0.005
+        rotY = math.clamp(rotY - input.Delta.Y * 0.005, -1.4, 1.4)
+    end
+end)
+UserInputService.InputEnded:Connect(function() dragging = false end)
