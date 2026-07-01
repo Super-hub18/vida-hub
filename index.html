@@ -57,7 +57,8 @@
             font-weight: 600;
         }
 
-        .key-box {
+        /* Neue Such-Box im selben Design wie die alte Key-Box */
+        .search-box {
             background: #111111;
             border: 2px solid #ffffff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
@@ -67,9 +68,10 @@
             margin: 0 auto 40px auto;
         }
 
-        .key-box h3 {
+        .search-box h3 {
             color: #ffffff;
             margin-top: 0;
+            margin-bottom: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -86,7 +88,6 @@
             text-align: center;
             font-size: 1rem;
             outline: none;
-            margin-bottom: 15px;
         }
 
         input[type="text"]:focus {
@@ -94,34 +95,9 @@
             border-color: #ffffff;
         }
 
-        .submit-btn {
-            background-color: #111111;
-            color: #ffffff;
-            border: 1px solid #ffffff;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 90%;
-            transition: all 0.2s;
-        }
-
-        .submit-btn:hover {
-            background-color: #ffffff;
-            color: #000000;
-            box-shadow: 0 0 12px #ffffff;
-        }
-
-        .status-message {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        /* Container ist standardmäßig versteckt */
+        /* Container ist jetzt direkt im Grid-Modus sichtbar */
         .hub-container {
-            display: none; 
+            display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             max-width: 1000px;
@@ -136,6 +112,9 @@
             padding: 25px 20px;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
+            /* Flex-Layout sorgt dafür, dass die Sortierung über die CSS-'order'-Eigenschaft klappt */
+            display: flex;
+            flex-direction: column;
         }
 
         .block:hover {
@@ -156,6 +135,7 @@
             color: #888888;
             font-size: 0.95rem;
             margin-bottom: 20px;
+            flex-grow: 1; /* Schiebt die Buttons gleichmäßig nach unten */
         }
 
         .copy-btn {
@@ -169,6 +149,7 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.2s;
+            margin-top: auto;
         }
 
         .copy-btn:hover {
@@ -207,37 +188,35 @@
         </div>
     </div>
 
-    <div class="key-box">
-        <h3>🔑 Enter Key to Unlock Hub</h3>
-        <input type="text" id="keyInput" placeholder="Enter Key Here...">
-        <button class="submit-btn" onclick="checkKey()">Submit Key</button>
-        <div id="status" class="status-message" style="color: #666666;">Locked 🔒</div>
+    <div class="search-box">
+        <h3>🔍 Search for Games</h3>
+        <input type="text" id="searchInput" placeholder="Type game name..." oninput="filterGames()" onkeydown="handleSearchKey(event)">
     </div>
 
     <div class="hub-container" id="hubContainer">
 
-        <div class="block" id="block1">
+        <div class="block" id="block1" data-title="Blox Fruits [Hermanos Pvp]">
             <img src="IMG_3414.jpeg" alt="Hermanos Pvp" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🏴‍☠️ Blox Fruits [Hermanos Pvp]</h2>
             <p>Hermanos Hub - Best Bounty & Auto Farm Script</p>
             <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))()`)">Copy Script</button>
         </div>
 
-        <div class="block" id="block2">
+        <div class="block" id="block2" data-title="Blox Fruits [QUANTUM ONYX]">
             <img src="IMG_3413.jpeg" alt="Quantum Onyx" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>⚔️ Blox Fruits [QUANTUM ONYX]</h2>
             <p>Fake Admin, Raids, Auto Farm, Quests & More!</p>
             <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua&quot;))()`)">Copy Script</button>
         </div>
 
-        <div class="block" id="block3">
+        <div class="block" id="block3" data-title="Rivals [Lexus]">
             <img src="IMG_3415.jpeg" alt="Rivals Lexus" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🎯 Rivals [Lexus]</h2>
             <p>Aimbot, Infinite Double Jump, ESP & More!</p>
             <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/awakeningswifters/LexusHubLoader/refs/heads/main/Loader.lua&quot;))()`)">Copy Script</button>
         </div>
 
-        <div class="block" id="block4">
+        <div class="block" id="block4" data-title="Admin Script [Vida Hub]">
             <img src="IMG_3416.jpeg" alt="Vida Hub" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>👑 Admin Script [Vida Hub]</h2>
             <p>Vida Hub - Fly, Teleport, Ghost mode & more features!</p>
@@ -247,29 +226,47 @@
     </div>
 
     <script>
-        const correctKey = "rbx-hub777"; 
+        function filterGames() {
+            const input = document.getElementById("searchInput").value.toLowerCase().trim();
+            const blocks = document.querySelectorAll(".block");
 
-        function checkKey() {
-            const input = document.getElementById("keyInput").value.toLowerCase().trim();
-            const status = document.getElementById("status");
-            const container = document.getElementById("hubContainer");
-
-            if (input === correctKey) {
-                status.innerText = "Access Granted! ✅ Unlocked";
-                status.style.color = "#ffffff";
-                document.getElementById("keyInput").style.borderColor = "#ffffff";
+            blocks.forEach(block => {
+                // Holt den Titel aus dem 'data-title'-Attribut
+                const gameTitle = block.getAttribute("data-title").toLowerCase();
                 
-                container.style.display = "grid";
-            } else if (input === "") {
-                status.innerText = "Please enter a key! ⚠️";
-                document.getElementById("keyInput").style.borderColor = "#ffffff";
-                container.style.display = "none";
-            } else {
-                status.innerText = "Wrong Key! ❌ Try Again";
-                status.style.color = "#ff4b4b";
-                document.getElementById("keyInput").style.borderColor = "#ff4b4b";
-                container.style.display = "none";
+                if (input === "") {
+                    // Wenn nichts eingegeben ist, alles zurücksetzen (Standard-Reihenfolge)
+                    block.style.order = "0";
+                    block.style.opacity = "1";
+                    block.style.display = "flex";
+                } else if (gameTitle.startsWith(input)) {
+                    // Wenn das Spiel exakt mit den eingegebenen Buchstaben startet -> Ganz nach oben!
+                    block.style.order = "-2";
+                    block.style.opacity = "1";
+                    block.style.display = "flex";
+                } else if (gameTitle.includes(input)) {
+                    // Wenn die Buchstaben irgendwo im Namen vorkommen -> Dahinter einreihen
+                    block.style.order = "-1";
+                    block.style.opacity = "1";
+                    block.style.display = "flex";
+                } else {
+                    // Gar kein Treffer -> Leicht ausblenden oder komplett verstecken (hier auf display: none)
+                    block.style.display = "none";
+                }
+            });
+        }
+
+        function handleSearchKey(event) {
+            // Wenn Enter gedrückt wird, wird das Feld geleert und alles wieder normal angezeigt
+            if (event.key === "Enter") {
+                resetSearch();
             }
+        }
+
+        function resetSearch() {
+            document.getElementById("searchInput").value = "";
+            filterGames();
+            document.getElementById("searchInput").blur(); // Entfernt den Cursor aus dem Feld
         }
 
         function copyScript(button, scriptText) {
