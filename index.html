@@ -57,21 +57,34 @@
             font-weight: 600;
         }
 
-        /* Neue Such-Box im selben Design wie die alte Key-Box */
+        /* Such- und Kategorie-Bereich nebeneinander */
+        .controls-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            max-width: 650px;
+            margin: 0 auto 40px auto;
+            padding: 0 10px;
+        }
+
         .search-box {
             background: #111111;
             border: 2px solid #ffffff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto 40px auto;
+            padding: 15px;
+            flex: 1;
+            min-width: 250px;
         }
 
-        .search-box h3 {
+        .search-box h3, .category-box h3 {
             color: #ffffff;
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -79,14 +92,14 @@
         }
 
         input[type="text"] {
-            width: 85%;
-            padding: 12px;
+            width: 90%;
+            padding: 10px;
             background-color: #000000;
             border: 1px solid #333333;
             border-radius: 8px;
             color: white;
             text-align: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
         }
 
@@ -95,7 +108,46 @@
             border-color: #ffffff;
         }
 
-        /* Container ist jetzt direkt im Grid-Modus sichtbar */
+        .category-box {
+            background: #111111;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 200px;
+        }
+
+        .category-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .cat-btn {
+            background-color: #000000;
+            color: #888888;
+            border: 1px solid #333333;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cat-btn:hover {
+            color: #ffffff;
+            border-color: #666666;
+        }
+
+        .cat-btn.active {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Container & Blöcke */
         .hub-container {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -111,8 +163,6 @@
             border-radius: 12px;
             padding: 25px 20px;
             transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            /* Flex-Layout sorgt dafür, dass die Sortierung über die CSS-'order'-Eigenschaft klappt */
             display: flex;
             flex-direction: column;
         }
@@ -135,7 +185,7 @@
             color: #888888;
             font-size: 0.95rem;
             margin-bottom: 20px;
-            flex-grow: 1; /* Schiebt die Buttons gleichmäßig nach unten */
+            flex-grow: 1;
         }
 
         .copy-btn {
@@ -163,6 +213,15 @@
             border-color: #ffffff !important;
             box-shadow: 0 0 15px #ffffff !important;
         }
+
+        /* Kleine Anzeige für die Kopieranzahl */
+        .copy-count-badge {
+            font-size: 0.8rem;
+            color: #666666;
+            margin-top: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -188,92 +247,162 @@
         </div>
     </div>
 
-    <div class="search-box">
-        <h3>🔍 Search for Games</h3>
-        <input type="text" id="searchInput" placeholder="Type game name..." oninput="filterGames()" onkeydown="handleSearchKey(event)">
+    <div class="controls-container">
+        <div class="search-box">
+            <h3>🔍 Search for Games</h3>
+            <input type="text" id="searchInput" placeholder="Type game name..." oninput="filterAndSortGames()" onkeydown="handleSearchKey(event)">
+        </div>
+
+        <div class="category-box">
+            <h3>🗂️ Category</h3>
+            <div class="category-buttons">
+                <button id="catAll" class="cat-btn active" onclick="setCategory('all')">All</button>
+                <button id="catPopular" class="cat-btn" onclick="setCategory('popular')">Popular</button>
+            </div>
+        </div>
     </div>
 
     <div class="hub-container" id="hubContainer">
 
-        <div class="block" id="block1" data-title="Blox Fruits [Hermanos Pvp]">
+        <div class="block" id="block1" data-title="Blox Fruits [Hermanos Pvp]" data-default-count="1420">
             <img src="IMG_3414.jpeg" alt="Hermanos Pvp" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🏴‍☠️ Blox Fruits [Hermanos Pvp]</h2>
             <p>Hermanos Hub - Best Bounty & Auto Farm Script</p>
-            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))()`)">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua'))()`, 'block1')">Copy Script</button>
+            <div class="copy-count-badge" id="count-block1">0 copies</div>
         </div>
 
-        <div class="block" id="block2" data-title="Blox Fruits [QUANTUM ONYX]">
+        <div class="block" id="block2" data-title="Blox Fruits [QUANTUM ONYX]" data-default-count="985">
             <img src="IMG_3413.jpeg" alt="Quantum Onyx" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>⚔️ Blox Fruits [QUANTUM ONYX]</h2>
             <p>Fake Admin, Raids, Auto Farm, Quests & More!</p>
-            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua&quot;))()`)">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua&quot;))()`, 'block2')">Copy Script</button>
+            <div class="copy-count-badge" id="count-block2">0 copies</div>
         </div>
 
-        <div class="block" id="block3" data-title="Rivals [Lexus]">
+        <div class="block" id="block3" data-title="Rivals [Lexus]" data-default-count="750">
             <img src="IMG_3415.jpeg" alt="Rivals Lexus" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🎯 Rivals [Lexus]</h2>
             <p>Aimbot, Infinite Double Jump, ESP & More!</p>
-            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/awakeningswifters/LexusHubLoader/refs/heads/main/Loader.lua&quot;))()`)">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/awakeningswifters/LexusHubLoader/refs/heads/main/Loader.lua&quot;))()`, 'block3')">Copy Script</button>
+            <div class="copy-count-badge" id="count-block3">0 copies</div>
         </div>
 
-        <div class="block" id="block4" data-title="Admin Script [Vida Hub]">
+        <div class="block" id="block4" data-title="Admin Script [Vida Hub]" data-default-count="2150">
             <img src="IMG_3416.jpeg" alt="Vida Hub" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>👑 Admin Script [Vida Hub]</h2>
             <p>Vida Hub - Fly, Teleport, Ghost mode & more features!</p>
-            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/RBX-Creator/rbx-hub/refs/heads/main/Vida%20Hub&quot;))()`)">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/RBX-Creator/rbx-hub/refs/heads/main/Vida%20Hub&quot;))()`, 'block4')">Copy Script</button>
+            <div class="copy-count-badge" id="count-block4">0 copies</div>
         </div>
 
     </div>
 
     <script>
-        function filterGames() {
-            const input = document.getElementById("searchInput").value.toLowerCase().trim();
-            const blocks = document.querySelectorAll(".block");
+        let currentCategory = 'all'; // Standard-Kategorie ist 'all'
 
+        // Lädt die Klickzahlen beim Starten der Seite
+        window.addEventListener('DOMContentLoaded', () => {
+            const blocks = document.querySelectorAll(".block");
             blocks.forEach(block => {
-                // Holt den Titel aus dem 'data-title'-Attribut
-                const gameTitle = block.getAttribute("data-title").toLowerCase();
+                const id = block.id;
+                const defaultCount = parseInt(block.getAttribute("data-default-count")) || 0;
                 
-                if (input === "") {
-                    // Wenn nichts eingegeben ist, alles zurücksetzen (Standard-Reihenfolge)
-                    block.style.order = "0";
-                    block.style.opacity = "1";
-                    block.style.display = "flex";
-                } else if (gameTitle.startsWith(input)) {
-                    // Wenn das Spiel exakt mit den eingegebenen Buchstaben startet -> Ganz nach oben!
-                    block.style.order = "-2";
-                    block.style.opacity = "1";
-                    block.style.display = "flex";
-                } else if (gameTitle.includes(input)) {
-                    // Wenn die Buchstaben irgendwo im Namen vorkommen -> Dahinter einreihen
-                    block.style.order = "-1";
-                    block.style.opacity = "1";
+                // Holt die gespeicherten Klicks aus dem Browser oder nimmt den Startwert
+                let savedClicks = localStorage.getItem('clicks-' + id);
+                if (savedClicks === null) {
+                    localStorage.setItem('clicks-' + id, defaultCount);
+                    savedClicks = defaultCount;
+                }
+                
+                document.getElementById('count-' + id).innerText = parseInt(savedClicks).toLocaleString('en-US') + " copies";
+            });
+            
+            // Einmalig die Standardreihenfolge oder Sortierung erzwingen
+            filterAndSortGames();
+        });
+
+        // Ändert die ausgewählte Kategorie
+        function setCategory(category) {
+            currentCategory = category;
+            
+            document.getElementById('catAll').classList.toggle('active', category === 'all');
+            document.getElementById('catPopular').classList.toggle('active', category === 'popular');
+            
+            filterAndSortGames();
+        }
+
+        // Steuert sowohl das Filtern nach Namen als auch das Sortieren nach Beliebtheit
+        function filterAndSortGames() {
+            const input = document.getElementById("searchInput").value.toLowerCase().trim();
+            const container = document.getElementById("hubContainer");
+            const blocks = Array.from(document.querySelectorAll(".block"));
+
+            // 1. Sichtbarkeit filtern (basierend auf der Suche)
+            blocks.forEach(block => {
+                const gameTitle = block.getAttribute("data-title").toLowerCase();
+                if (input === "" || gameTitle.includes(input)) {
                     block.style.display = "flex";
                 } else {
-                    // Gar kein Treffer -> Leicht ausblenden oder komplett verstecken (hier auf display: none)
                     block.style.display = "none";
                 }
             });
+
+            // 2. Sortieren
+            if (currentCategory === 'popular') {
+                // Nach Kopier-Anzahl sortieren (Höchste zuerst)
+                blocks.sort((a, b) => {
+                    const clicksA = parseInt(localStorage.getItem('clicks-' + a.id)) || 0;
+                    const clicksB = parseInt(localStorage.getItem('clicks-' + b.id)) || 0;
+                    return clicksB - clicksA;
+                });
+            } else {
+                // Standard: Nach Relevanz der Anfangsbuchstaben sortieren (wie vorher)
+                blocks.sort((a, b) => {
+                    const titleA = a.getAttribute("data-title").toLowerCase();
+                    const titleB = b.getAttribute("data-title").toLowerCase();
+                    
+                    if (input !== "") {
+                        const startA = titleA.startsWith(input) ? 1 : 0;
+                        const startB = titleB.startsWith(input) ? 1 : 0;
+                        if (startA !== startB) return startB - startA; // Anfangsbuchstaben bevorzugen
+                    }
+                    
+                    // Wenn kein Suchtext da ist oder beide gleich relevant sind, nach ID sortieren
+                    return a.id.localeCompare(b.id);
+                });
+            }
+
+            // HTML-Elemente im DOM neu anordnen basierend auf der Sortierung
+            blocks.forEach(block => container.appendChild(block));
         }
 
         function handleSearchKey(event) {
-            // Wenn Enter gedrückt wird, wird das Feld geleert und alles wieder normal angezeigt
             if (event.key === "Enter") {
-                resetSearch();
+                document.getElementById("searchInput").value = "";
+                filterAndSortGames();
+                document.getElementById("searchInput").blur();
             }
         }
 
-        function resetSearch() {
-            document.getElementById("searchInput").value = "";
-            filterGames();
-            document.getElementById("searchInput").blur(); // Entfernt den Cursor aus dem Feld
-        }
-
-        function copyScript(button, scriptText) {
+        function copyScript(button, scriptText, blockId) {
             navigator.clipboard.writeText(scriptText).then(() => {
                 const originalText = button.innerText;
                 button.innerText = "Copied! ✅";
                 button.classList.add("copied");
+                
+                // Erhöhe den Klickzähler live
+                let currentClicks = parseInt(localStorage.getItem('clicks-' + blockId)) || 0;
+                currentClicks += 1;
+                localStorage.setItem('clicks-' + blockId, currentClicks);
+                
+                // Anzeige updaten
+                document.getElementById('count-' + blockId).innerText = currentClicks.toLocaleString('en-US') + " copies";
+                
+                // Falls wir in der 'Popular'-Ansicht sind, direkt neu sortieren
+                if (currentCategory === 'popular') {
+                    setTimeout(() => { filterAndSortGames(); }, 500);
+                }
                 
                 setTimeout(() => {
                     button.innerText = originalText;
