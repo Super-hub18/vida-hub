@@ -202,6 +202,7 @@
         </div>
     </div>
 
+    <!-- Suchanzeige -->
     <div class="controls-container">
         <div class="search-box">
             <h3>🔍 Search for Games</h3>
@@ -211,6 +212,7 @@
 
     <div class="hub-container" id="hubContainer">
 
+        <!-- Block 1 -->
         <div class="block" id="block1" data-title="Blox Fruits [Hermanos Pvp]" data-default-count="1420">
             <img src="IMG_3414.jpeg" alt="Hermanos Pvp" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🏴‍☠️ Blox Fruits [Hermanos Pvp]</h2>
@@ -219,6 +221,7 @@
             <div class="copy-count-badge" id="count-block1">0 copies</div>
         </div>
 
+        <!-- Block 2 -->
         <div class="block" id="block2" data-title="Blox Fruits [QUANTUM ONYX]" data-default-count="985">
             <img src="IMG_3413.jpeg" alt="Quantum Onyx" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>⚔️ Blox Fruits [QUANTUM ONYX]</h2>
@@ -227,6 +230,7 @@
             <div class="copy-count-badge" id="count-block2">0 copies</div>
         </div>
 
+        <!-- Block 3 -->
         <div class="block" id="block3" data-title="Rivals [Lexus]" data-default-count="750">
             <img src="IMG_3415.jpeg" alt="Rivals Lexus" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🎯 Rivals [Lexus]</h2>
@@ -235,6 +239,7 @@
             <div class="copy-count-badge" id="count-block3">0 copies</div>
         </div>
 
+        <!-- Block 4 -->
         <div class="block" id="block4" data-title="Admin Script [Vida Hub]" data-default-count="2150">
             <img src="IMG_3416.jpeg" alt="Vida Hub" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>👑 Admin Script [Vida Hub]</h2>
@@ -243,6 +248,7 @@
             <div class="copy-count-badge" id="count-block4">0 copies</div>
         </div>
 
+        <!-- Block 5 -->
         <div class="block" id="block5" data-title="+1 Keyboard Escape Speed [Lucy Hub]" data-default-count="1280">
             <img src="IMG_3430.jpeg" alt="Lucy Hub" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>⌨️ +1 Keyboard Escape Speed [Lucy Hub]</h2>
@@ -251,6 +257,7 @@
             <div class="copy-count-badge" id="count-block5">0 copies</div>
         </div>
 
+        <!-- Block 6 -->
         <div class="block" id="block6" data-title="Element Dungeons [xpa1n]" data-default-count="1150">
             <img src="IMG_3431.jpeg" alt="Element Dungeons" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🔮 Element Dungeons [xpa1n]</h2>
@@ -259,6 +266,7 @@
             <div class="copy-count-badge" id="count-block6">0 copies</div>
         </div>
 
+        <!-- Block 7 -->
         <div class="block" id="block7" data-title="99 nights in the forest [Foxname]" data-default-count="2500">
             <img src="IMG_3439.jpeg" alt="99 nights in the forest" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🌲 99 nights in the forest [Foxname]</h2>
@@ -267,11 +275,12 @@
             <div class="copy-count-badge" id="count-block7">0 copies</div>
         </div>
 
+        <!-- Block 8: Squid Game 3 (KORRIGIERT) -->
         <div class="block" id="block8" data-title="Squid Game 3 [Scriptblox]" data-default-count="1350">
             <img src="IMG_3446.jpeg" alt="Squid Game 3" style="width: 100%; height: auto; max-height: 180px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; border: 1px solid #222222;">
             <h2>🦑 Squid Game 3 [Scriptblox]</h2>
             <p>Auto finish Game , fly , Speed , Safe tp , Speed</p>
-            <button class="copy-btn" onclick="copyScript(this, '--[[\n\tWARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!\n]]\nloadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/madenciicom/squidgamex/refs/heads/main/SquidGameX_KaiXar.lua&quot;))()', 'block8')">Copy Script</button>
+            <button class="copy-btn" onclick="copyScript(this, `--[[ \n\tWARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!\n]]\nloadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/madenciicom/squidgamex/refs/heads/main/SquidGameX_KaiXar.lua&quot;))()`, 'block8')">Copy Script</button>
             <div class="copy-count-badge" id="count-block8">0 copies</div>
         </div>
 
@@ -310,7 +319,7 @@
                 }
             });
 
-            // Automatische Sortierung nach Klicks (Höchste oben)
+            // Automatische Sortierung nach Klicks
             blocks.sort((a, b) => {
                 const clicksA = parseInt(localStorage.getItem('clicks-' + a.id)) || 0;
                 const clicksB = parseInt(localStorage.getItem('clicks-' + b.id)) || 0;
