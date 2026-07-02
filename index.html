@@ -284,6 +284,7 @@
                 const id = block.id;
                 const defaultCount = parseInt(block.getAttribute("data-default-count")) || 0;
                 
+                // Falls du die Seite vorher offen hattest, überschreiben wir jetzt alte leere localStorages mit dem neuen Standardwert
                 let savedClicks = localStorage.getItem('clicks-' + id);
                 if (savedClicks === null) {
                     localStorage.setItem('clicks-' + id, defaultCount);
@@ -301,7 +302,6 @@
             const container = document.getElementById("hubContainer");
             const blocks = Array.from(document.querySelectorAll(".block"));
 
-            // Filterung nach Suche
             blocks.forEach(block => {
                 const gameTitle = block.getAttribute("data-title").toLowerCase();
                 if (input === "" || gameTitle.includes(input)) {
@@ -311,14 +311,13 @@
                 }
             });
 
-            // Automatische Sortierung nach Klicks (Höchste zuerst)
+            // Sortierung nach Klicks
             blocks.sort((a, b) => {
                 const clicksA = parseInt(localStorage.getItem('clicks-' + a.id)) || 0;
                 const clicksB = parseInt(localStorage.getItem('clicks-' + b.id)) || 0;
                 return clicksB - clicksA;
             });
 
-            // Im DOM einsortieren
             blocks.forEach(block => container.appendChild(block));
         }
 
@@ -342,7 +341,6 @@
                 
                 document.getElementById('count-' + blockId).innerText = currentClicks.toLocaleString('en-US') + " copies";
                 
-                // Aktualisiert die Reihenfolge sofort nach dem Kopieren
                 setTimeout(() => { filterAndSortGames(); }, 500);
                 
                 setTimeout(() => {
